@@ -1,4 +1,6 @@
-from time import sleep
+#!/usr/bin/env python
+
+
 import colorama
 from colorama import Fore
 from util import exportar_senha, gerar_senha, listar_senha, salvar_senha
@@ -28,7 +30,6 @@ while True:
         servico = input("O nome do site: ")
         user = input("O seu usuario: ")
         password = input("a senha: ")
-
         salvar_senha(servico, user, password)
 
     elif menu == 'l':
@@ -37,7 +38,7 @@ while True:
         listar_senha()
         print(Fore.LIGHTGREEN_EX+"-"*40)
         print("\n")
-        sleep(3)
+
     elif menu == 'x':
         filepath = input("Digite o caminho do arquivo que deseja criar: ")
         exportar_senha(filepath)

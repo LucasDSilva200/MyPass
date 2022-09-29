@@ -1,11 +1,12 @@
 import random
 import string
-import getpass
 import os
+from time import sleep
+from detectos import detect
 
 from file import criar_caminho, ler_arquivo, salvar_arquivo
-user = getpass.getuser()
-path = 'C:/Users/'+user+'/Documents/mypass'
+
+path = detect()
 
 
 def gerar_senha(tamanho):
@@ -29,6 +30,7 @@ def listar_senha():
     senhas = ler_arquivo(filepath)
     for senha in senhas:
         print(senha.strip('\n'))
+        sleep(0.5)
 
 
 
