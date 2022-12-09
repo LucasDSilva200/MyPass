@@ -15,10 +15,8 @@ def salvar_arquivo(path, text):
 
 
 def clean_file(path):
-    with open(path, 'w')as file:
+    with open(path, 'w+')as file:
         file.write("")
-
-
 
 
 def ler_arquivo(path):
