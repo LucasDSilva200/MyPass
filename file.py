@@ -14,6 +14,13 @@ def salvar_arquivo(path, text):
         file.write("\n")
 
 
+def clean_file(path):
+    with open(path, 'w')as file:
+        file.write("")
+
+
+
+
 def ler_arquivo(path):
     with open(path, 'r+')as file:
         linhas = file.readlines()
