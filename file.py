@@ -1,25 +1,25 @@
-import os
+import csv
+
+# path,lines:list
 
 
-def criar_caminho(path):
-    try:
-        os.makedirs(path)
-    except FileExistsError:
-        pass
+def export_to_csv(path, lines: list):
+    columns = [('Nome do site', 'URL', 'Username', 'Password')]
+    filepath = path + "/mypass.csv"
+    f = open(filepath, 'w', newline='', encoding='utf-8')
 
+    w = csv.writer(f, delimiter=';')
 
-def salvar_arquivo(path, text):
-    with open(path, 'a+')as file:
-        file.write(text)
-        file.write("\n")
+    for coluna in columns:
+        w.writerow([coluna[0],
+                    coluna[1],
+                    coluna[2],
+                    coluna[3]])
 
-
-def clean_file(path):
-    with open(path, 'w+')as file:
-        file.write("")
-
-
-def ler_arquivo(path):
-    with open(path, 'r+')as file:
-        linhas = file.readlines()
-    return linhas
+    for line in lines:
+        w.writerow([line[0],
+                    line[1],
+                    line[2],
+                    line[3]])
+    print("\nArquivo salvo com sucesso!!!")
+    print(f"Local do arquivo {filepath}")

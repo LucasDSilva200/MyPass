@@ -1,24 +1,24 @@
 import random
 import string
-import os
 from time import sleep
-from detectos import detect
+from file import export_to_csv
 
-from file import clean_file, criar_caminho, ler_arquivo, salvar_arquivo
+from queries import modify_register, query_register, remove_register,\
+    save_register, list_register
 
-PATH = detect()
-FILEPATH = PATH + "/passwords.txt"
+REGISTER = {}
 
 
-@staticmethod
-def create_file():
-    if not os.path.exists(PATH):
-        criar_caminho(PATH)
-        try:
-            file = open(FILEPATH)
-            file.close()
-        except FileNotFoundError:
-            clean_file(FILEPATH)
+def print_result(result):
+    print(f'''
+-----------------------------------------------
+| Site: {result[0]}
+| URL: {result[1]}
+| Username: {result[2]}
+| Password: {result[3]}
+-----------------------------------------------
+        ''')
+    sleep(1)  # import time
 
 
 def gerar_senha(tamanho):
@@ -27,39 +27,44 @@ def gerar_senha(tamanho):
     return ''.join(rnd.choice(chars)for i in range(tamanho))
 
 
-def salvar_senha(servico, username, password):
-    texto = f"{servico}={username}:{password}"
-    salvar_arquivo(FILEPATH, texto)
+def salvar_senha(name_service, url, username, password):
+    REGISTER[name_service] = {
+        'url_site': url,
+        'username': username,
+        'password': password
+    }
+    save_register(site_name=name_service,
+                  register=REGISTER[name_service])
+    print("Senha salva com sucesso com sucesso!!!")
 
 
 def listar_senha():
-    senhas = ler_arquivo(FILEPATH)
-    for senha in senhas:
-        print('\n'+senha.strip('\n'))
-        sleep(0.5)
+    results = list_register()
+    for result in results:
+        print_result(result)
 
 
-def exportar_senha(filesave):
-    senhas = ler_arquivo(FILEPATH)
-    for senha in senhas:
-        texto = senha.strip('\n')
-        salvar_arquivo(filesave, texto)
+def exportar_senha(path):
+    results = list_register()
+    export_to_csv(path=path, lines=results)
 
 
 def buscar_senha(pass_query):
-    senhas = ler_arquivo(FILEPATH)
-    for senha in senhas:
-        if pass_query in senha:
-            print('\n'+senha.strip('\n'))
-            sleep(0.5)
+    results = query_register(pass_query)
+    for result in results:
+        print_result(result=result)
 
 
-def apagar_registro(registro):
-    senhas = ler_arquivo(FILEPATH)
-    clean_file(path=PATH)
-    for senha in senhas:
-        if registro == senha.strip('\n'):
-            pass
-        else:
-            salvar_arquivo(path=FILEPATH, text=senha.strip('\n'))
-            sleep(0.5)
+def apagar_registro(site_name, username):
+    msg = remove_register(site_name=site_name, username=username)
+    print('\n'+msg+'\n')
+
+
+def modificar_registro(site_name, username, password):
+    REGISTER[site_name] = {
+        'url_site': '',
+        'username': username,
+        'password': password
+    }
+    msg = modify_register(site_name=site_name, register=REGISTER[site_name])
+    print('\n'+msg+'\n')
