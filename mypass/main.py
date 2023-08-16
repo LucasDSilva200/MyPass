@@ -16,7 +16,7 @@ colorama.init(autoreset=True)
 
 def main():
     logged = False
-    id = ''
+    user_id = ''
     while not logged:
         print_not_logged_menu()
 
@@ -29,7 +29,12 @@ def main():
                 case 1:
                     username = input("Username: ")
                     password = getpass(prompt="Senha: ")
-                    logged, id = log_in(username=username, password=password)
+                    try:
+                        logged, user_id = log_in(username=username, password=password)
+                    except TypeError:
+                        print("O usuário ou a senha está errado!!")
+        
+        
                 case 2:
                     username = input("Username: ")
                     password = getpass(prompt="Senha: ")
@@ -66,14 +71,14 @@ def main():
                         url = input("A url do site: ")
                         user = input("O seu usuario: ")
                         salvar_senha(name_service=servico, url=url,
-                                     username=user, password=senha, id=id)
+                                     username=user, password=senha, id=user_id)
                     else:
                         continue
 
                 case 2:
                     print(f"\n{Fore.YELLOW}Listando as senhas salvas:\n")
                     print(Fore.LIGHTGREEN_EX+"-"*50)
-                    listar_senha(id=id)
+                    listar_senha(id=user_id)
                     print(Fore.LIGHTGREEN_EX+"-"*50)
                     print("\n")
                 case 3:
@@ -82,10 +87,10 @@ def main():
                     user = input("O seu usuario: ")
                     password = input("a senha: ")
                     salvar_senha(name_service=servico, url=url,
-                                 username=user, password=password, id=id)
+                                 username=user, password=password, id=user_id)
 
                 case 4:
-                    exportar_senha(PATH, id=id)
+                    exportar_senha(PATH, id=user_id)
                 case 5:
                     print("Informe o caminho do arquivo .csv ")
                     filepath = input("Path> ")
@@ -94,20 +99,20 @@ def main():
                     perfil = input(
                         "Digite o nome do site que deseja "
                         + "pesquisar: ").lower()
-                    buscar_senha(pass_query=perfil, id=id)
+                    buscar_senha(pass_query=perfil, id=user_id)
                 case 7:
                     site = input("Qual é o nome do site que deseja"
                                  + "alterar as credenciais: ")
                     user = input("O seu usuario: ")
                     password = input("a senha: ")
                     modificar_registro(site_name=site,
-                                       username=user, password=password, id=id)
+                                       username=user, password=password, id=user_id)
                 case 8:
                     site = input(
                         "Digite o nome do site para ser excluido"
                         + "> ")
                     user = input("Digite o user que deseja apagar> ")
-                    apagar_registro(site_name=site, username=user, id=id)
+                    apagar_registro(site_name=site, username=user, id=user_id)
 
                 case 0:
                     DATABASE.close()

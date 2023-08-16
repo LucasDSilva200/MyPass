@@ -80,6 +80,12 @@ def get_hash(username):
     CURSOR.execute("SELECT hash FROM usuario WHERE username= ?", (username,))
     return CURSOR.fetchall()
 
+def verify_user(username):
+    CURSOR.execute("SELECT username FROM usuario WHERE username= ?",(username,))
+    if CURSOR.fetchall():
+        return True
+    else:
+        return False 
 
 def get_user_id(username, hashpassword):
     CURSOR.execute(

@@ -6,7 +6,7 @@ from src.file import export_to_csv, import_to_csv
 
 from src.queries import modify_register, query_register, \
     remove_register, save_register, list_register, set_user, \
-    get_salt, get_hash, get_user_id
+    get_salt, get_hash, get_user_id, verify_user
 from src.key import create_key
 from src.detectos import detect
 REGISTER = {}
@@ -18,7 +18,11 @@ def create_hashed_password(salted_pass):
 
 
 def log_in(username, password):
-    salts = get_salt(username=username)
+    vUser = verify_user(username=username)
+    if vUser:
+        salts = get_salt(username=username)
+    else:
+        return False
     saltpass = salts[0][0]+password
     stored_hash = get_hash(username=username)
     hash_to_compare = create_hashed_password(salted_pass=saltpass)
@@ -26,16 +30,22 @@ def log_in(username, password):
         id = get_user_id(username=username, hashpassword=hash_to_compare)
         return True, id[0][0]
     else:
-        print("O usuário ou a senha está errado!!")
         return False
 
 
 def create_user(username, password):
-    salt = create_key(path=detect())
-    saltpass = salt+password
-    hashpassword = create_hashed_password(salted_pass=saltpass)
-    set_user(username=username, salt=salt, hash=hashpassword)
-
+    vUser = verify_user(username=username)
+    if vUser:
+        print("O nome de usuário já existe!!")
+        return False
+    else:
+        salt = create_key(path=detect())
+        saltpass = salt+password
+        hashpassword = create_hashed_password(salted_pass=saltpass)
+        set_user(username=username, salt=salt, hash=hashpassword)
+        
+    
+    
 
 def print_result(result):
     print(f'''
